@@ -1,21 +1,18 @@
 import {Router} from "express";
-import path from "path";
 import {readFile,writeFile} from "fs/promises"
-import { fileURLToPath } from "url";
-import { log } from "console";
 export const productosRoutes = Router();
 
 class productos {
     constructor() {
-        this.file="./src/services/products.json"
+        this.file="./services/products.json"
         this.products=[];
     }
     //Funcion que crea un producto
-    async crearProducto( title,description,code,price,status,stock,category){
+    async crearProducto( title,description,code,price,status,stock,category,thumbnail){
         let productos = JSON.parse(await readFile(this.file, "utf-8"));
         this.products=productos;
         const id = productos.length + 1;
-        const producto ={title,description,code,price,status,stock,category,id}
+        const producto ={title,description,thumbnail,code,price,status,stock,category,id}
         this.products.push(producto)
         const newProduct = JSON.stringify(this.products);
         writeFile(this.file,newProduct);
@@ -72,11 +69,13 @@ class productos {
         }
     }
     //Funcion modificar
-    async modificarProducto (pid,title,description,code,price,status,stock,category){
+    async modificarProducto (pid,title,description,code,price,status,stock,category,thumbnail){
         console.log(title,description,code,price,status,stock,category);
         
         this.products = JSON.parse(await readFile(this.file, "utf-8"));
         let oldProd = this.products.find(item => item.id == pid);
+        console.log(oldProd);
+        
         let indexOfItem = this.products.findIndex(item=> item.id == pid)
         this.products[indexOfItem] = {title: title== undefined? oldProd.title : title,
                        description: description == undefined ? oldProd.description :description ,
@@ -84,7 +83,9 @@ class productos {
                        price: price == undefined ? oldProd.price :price,
                        status: status == undefined ? oldProd.status :status,
                        stock :stock == undefined ? oldProd.stock :stock,
-                       category :category == undefined ? oldProd.category : category
+                       category :category == undefined ? oldProd.category : category,
+                       thumbnail :thumbnail == undefined ? oldProd.thumbnail :thumbnail,
+                       id: oldProd.id
                     }
       
         let newProducts = JSON.stringify(this.products);
@@ -118,7 +119,7 @@ productosRoutes.get("/:pid", async (req,res) =>{
 })
 //Post
  productosRoutes.post("/", async (req,res) =>{
-     const {title,description,code,price,status,stock,category} =req.body;
+     const {title,description,code,price,status,stock,category,thumbnail} =req.body;
      
      if( typeof title !=="string" && 
          typeof description !=="string" &&
@@ -127,19 +128,21 @@ productosRoutes.get("/:pid", async (req,res) =>{
          typeof price !=="number" && 
          typeof status !=="boolean" && 
          typeof stock !=="number" && 
-         typeof category !=="string"){
+         typeof category !=="string" &&
+        typeof thumbnail !== "string"){
          res.status(400).send("Error se ha ingresado un tipo de dato incorrecto")
          }
      else{
-         res.send(await productosArray.crearProducto(title,description,code,price,status,stock,category));
+         res.send(await productosArray.crearProducto(title,description,code,price,status,stock,category,thumbnail));
      }
  })
  //Update
  productosRoutes.put("/:pid",(req,res) =>{
     let {pid} = req.params;
     pid = parseInt(pid);
-    let {title,description,code,price,status,stock,category} =req.body;
-    let productoModif = productosArray.modificarProducto(pid,title,description,code,price,status,stock,category)
+    let {title,description,code,price,status,stock,category,thumbnail} =req.body;
+    
+    let productoModif = productosArray.modificarProducto(pid,title,description,code,price,status,stock,category,thumbnail)
     res.send("producto modificado",productoModif)
  })
  //Delete

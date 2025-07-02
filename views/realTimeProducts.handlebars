@@ -1,0 +1,130 @@
+<div class="container-fluid">
+    <div class="row">
+    <h2 class="display-5">Productos</h2>
+<div id="productList" class="col-md flex flex-row flex-wrap">
+
+                    
+    
+</div>
+<div class="row flex flex-col align-center justify-center">
+    <h2 class="display-5">Control de base de datos</h2>
+    <p class="d-inline-flex gap-1">
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Subir producto</a>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Actualizar producto</button>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Eliminar producto</button>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+    <h4 class="display-6 mb-3">Subir producto</h4>
+     <form id="newProductForm" >
+  <div class="mb-3">
+    <label for="titleInput" class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" id="titleInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="descriptionInput" class="form-label">Description</label>
+    <input type="text" name="description" class="form-control" id="descriptionInput" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="codeInput" class="form-label">code</label>
+    <input type="text" name="code" class="form-control" id="codeInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="priceInput" class="form-label">price</label>
+    <input type="number" name="price" class="form-control" id="priceInput" required>
+  </div>
+    <div class="mb-3">
+    <label for="categoryInput" class="form-label">Category</label>
+    <input type="text" name="category" class="form-control" id="categoryInput" required>
+  </div>
+  <div class="mb-3">
+    <label for="stockInput" class="form-label">Stock</label>
+    <input type="number" name="stock" class="form-control" id="stockInput" required>
+  </div>
+    <div class="mb-3">
+    <label for="imageInput" class="form-label">Image link</label>
+    <input type="text" name="imgLink" class="form-control" id="imageInput">
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Status </label>
+    <select id="status" name="status" class="form-select" aria-label="Default select example" required>
+        <option value=true>Active</option>
+        <option value=false>disabled</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+    </div>
+  </div>
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+        <h4 class="display-6">Actualizar producto</h4>
+           <form id="updateProductForm">
+            <div class="mb-3">
+                <label for="idInput" class="form-label">product ID</label>
+                <input type="number" name="idProd" class="form-control" id="idInput" required>
+            </div>
+            <div class="mb-3">
+                <label for="titleInput" class="form-label">Title</label>
+                <input type="text" name="title" class="form-control" id="titleInput" >
+            </div>
+            <div class="mb-3">
+                <label for="descriptionInput" class="form-label">Description</label>
+                <input type="text" name="description" class="form-control" id="descriptionInput">
+            </div>
+
+            <div class="mb-3">
+                <label for="codeInput" class="form-label">code</label>
+                <input type="text" name="code" class="form-control" id="codeInput" >
+            </div>
+            <div class="mb-3">
+                <label for="priceInput" class="form-label">price</label>
+                <input type="number" name="price" class="form-control" id="priceInput">
+            </div>
+                <div class="mb-3">
+                <label for="categoryInput" class="form-label">Category</label>
+                <input type="text" name="category" class="form-control" id="categoryInput">
+            </div>
+            <div class="mb-3">
+                <label for="stockInput" class="form-label">Stock</label>
+                <input type="number" name="stock" class="form-control" id="stockInput">
+            </div>
+                <div class="mb-3">
+                <label for="imageInput" class="form-label">Image link</label>
+                <input type="text" name="imgLink" class="form-control" id="imageInput">
+            </div>
+            <div class="mb-3">
+                <label for="status" name="status" class="form-label">Status </label>
+                <select id="status" class="form-select" aria-label="Default select example">
+                    <option value=true>Active</option>
+                    <option value=false>disabled</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+    </div>
+  </div>
+</div>
+    <div class="row">
+        <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample3">
+            <h4 class="display-6">Eliminar un producto</h4>
+            <form id="deleteProdForm">
+                <div class="mb-3">
+                    <label for="productIdInput" class="form-label">product ID</label>
+                    <input type="number"name="deleteProdId" class="form-control" id="productIdInput" required>
+                </div>
+
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+<script src="socket.io/socket.io.js"></script>
+<script src="../js/index.js"></script>
