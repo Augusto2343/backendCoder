@@ -140,11 +140,10 @@ productosRoutes.get("/:pid", async (req,res) =>{
  productosRoutes.put("/:pid",(req,res) =>{
     let {pid} = req.params;
     pid = parseInt(pid);
-    let {title,description,code,price,status,stock,category,thumbnail} =req.body;
-    console.log(title,description);
-    
+
+    const {title,description,code,price,status,stock,category,thumbnail} =req.body;
     let productoModif = productosArray.modificarProducto(pid,title,description,code,price,status,stock,category,thumbnail)
-    res.send("producto modificado",productoModif)
+    res.send("producto modificado",productoModif)    
  })
  //Delete
  productosRoutes.delete("/:pid", (req,res) =>{

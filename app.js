@@ -54,12 +54,11 @@ socketServer.on("connection",socket =>{
     })
     socket.on("updateProd", async(newProd,idProd) =>{
         let producto = JSON.stringify(newProd);
-        console.log("id Prod:",idProd);
-        console.log("Prod:",producto);
+        
         
         try{
             const res = await fetch(`http://localhost:5000/api/products/${idProd}`,{
-                method:"UPDATE",
+                method:"PUT",
                 headers:{ "Content-Type":"application/json"},
                 body: producto
             })
@@ -72,9 +71,7 @@ socketServer.on("connection",socket =>{
                 case 404:
                 socketServer.emit("notFoundVista",res)
                 break;
-                default:
-                console.log(res);
-                
+                default:                
                 socketServer.emit("errorVista",e )    
                 break;
             }
