@@ -54,7 +54,9 @@ socketServer.on("connection",socket =>{
     })
     socket.on("updateProd", async(newProd,idProd) =>{
         let producto = JSON.stringify(newProd);
-        console.log("HOLAAAAA");
+        console.log("id Prod:",idProd);
+        console.log("Prod:",producto);
+        
         try{
             const res = await fetch(`http://localhost:5000/api/products/${idProd}`,{
                 method:"UPDATE",
@@ -71,6 +73,8 @@ socketServer.on("connection",socket =>{
                 socketServer.emit("notFoundVista",res)
                 break;
                 default:
+                console.log(res);
+                
                 socketServer.emit("errorVista",e )    
                 break;
             }
@@ -79,6 +83,7 @@ socketServer.on("connection",socket =>{
         }
     })
     socket.on("borrarProd",async(idProd) =>{
+        
         try{
             const res = await fetch(`http://localhost:5000/api/products/${idProd}`,{
                 method:"DELETE",

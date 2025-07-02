@@ -141,6 +141,7 @@ productosRoutes.get("/:pid", async (req,res) =>{
     let {pid} = req.params;
     pid = parseInt(pid);
     let {title,description,code,price,status,stock,category,thumbnail} =req.body;
+    console.log(title,description);
     
     let productoModif = productosArray.modificarProducto(pid,title,description,code,price,status,stock,category,thumbnail)
     res.send("producto modificado",productoModif)

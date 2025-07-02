@@ -48,20 +48,27 @@ document.getElementById('deleteProdForm').addEventListener("submit",function(eve
 })
 document.getElementById('updateProductForm').addEventListener('submit', function(event) {
   event.preventDefault(); // Evita que se recargue la página 
-  const id = document.querySelector('input[name ="idProd')
-  const title = document.querySelector('input[name="title"]').value;
-  const description = document.querySelector('input[name="description"]').value;
-  const category = document.querySelector('input[name="category"]').value;
-  const price = parseInt(document.querySelector('input[name="price"]').value);
-  const code = document.querySelector('input[name="code"]').value;
-  const imgLink= document.querySelector('input[name="imgLink"]').value;
-  const status = document.querySelector('select[name="status"]').value;
-  const stock = parseInt( document.querySelector('input[name="stock"]').value);
+  const idProd = document.querySelector('input[name ="idProd').value
+  const title = document.querySelector('input[name="updateTitle"]').value;
+  const description = document.querySelector('input[name="updateDescription"]').value;
+  const category = document.querySelector('input[name="updateCategory"]').value;
+  const price = document.querySelector('input[name="updatePrice"]').value;
+  const code = document.querySelector('input[name="updateCode"]').value;
+  const imgLink= document.querySelector('input[name="updateImgLink"]').value;
+  const status = document.querySelector('select[name="updateStatus"]').value;
+  const stock = document.querySelector('input[name="updateStock"]').value;
 
-  const newProd= {title,description,code,price,status,stock,category,thumbnail:imgLink}
-  console.log(newProd);
-  
-    socketServer.emit("updateProducto", newProd)
+  const newProd= {title : title =="" ? undefined : title,
+    description : description == "" ? undefined : description,
+    price: price == "" ? undefined: parseInt(price),
+    code: code =="" ? undefined: code,
+    status: status =="" ? undefined: status,
+    stock: stock =="" ? undefined : parseInt(stock),
+    category: category==""? undefined: category,thumbnail:imgLink==""? undefined : imgLink}
+    console.log(newProd);
+    console.log(idProd);
+    
+    socketServer.emit("updateProd", newProd,idProd)
 
 });
 socketServer.on("errorVista", (e) =>{
