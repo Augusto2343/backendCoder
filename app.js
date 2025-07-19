@@ -1,13 +1,11 @@
-import express from "express";
+    import express from "express";
 import handlebars from "express-handlebars";
 import productosRouter from "./routes/productos.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
 import viewsRouter from "./routes/views.router.js"
-import productos from "./services/products.json" with {type: "json"};
-import { log } from "console";
-
+import mongoose from "mongoose";
 const app = express();
 const port = 5000;
 app.use(express.json());
@@ -22,13 +20,13 @@ const httpServer = app.listen(port,() =>{
 
     
 })
-
+mongoose.connect("mongodb+srv://augustodavidnoriega:Augus123@cluster0.9s6datl.mongodb.net/")
 app.use("/api/products",productosRouter);
 app.use("/api/carts",cartsRouter);
 const socketServer = new Server(httpServer);
 socketServer.on("connection",socket =>{
     console.log("Nuevo cliente conectado!");
-    socket.emit("realTimeProducts",productos)
+
     socket.on("subirProducto", async( newProduct) =>{
         let producto = JSON.stringify(newProduct);
         console.log("HOLAAAAA");

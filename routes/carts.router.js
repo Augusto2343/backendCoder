@@ -126,6 +126,7 @@ const cartArray = new cart();
 //Metodo Post 
 cartsRoutes.post("/", async (req,res) =>{
     const {products} =req.body;
+    
     console.log(products);
     
     let validacion= await cartArray.crearCarrito(products);

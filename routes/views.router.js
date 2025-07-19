@@ -4,7 +4,7 @@ const viewRouter = express.Router();
  viewRouter.get("/", (req, res) =>{
       res.render("home");
  })
-viewRouter.get("/realtimeproducts", (req,res) =>{
-    res.render("realTimeProducts")
+viewRouter.get("/products", (req,res) =>{
+    res.render("products")
 })
 export default viewRouter
