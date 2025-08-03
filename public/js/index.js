@@ -83,3 +83,5 @@ socketServer.on("exitoVista", (e) =>{
         title:"Peticion procesada correctamente"
     })
 })
+
+socketServer.emit("comprobarCart");

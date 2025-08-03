@@ -15,7 +15,7 @@ const productosSchema = new mongoose.Schema({
             type:String,
             default:""
         }
-    
+        
 })
 productosSchema.plugin(mongoosePaginate)
 const productosModel = mongoose.model("products",productosSchema);

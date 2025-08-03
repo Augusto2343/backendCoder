@@ -95,9 +95,11 @@ productosRoutes.get("/:pid", async (req,res) =>{
     res.send("producto modificado",productoModif)    
  })
  //Delete
- productosRoutes.delete("/:pid", (req,res) =>{
+ productosRoutes.delete("/:pid", async(req,res) =>{
     let {pid} =req.params;
-    productosArray.eliminarProduct(pid)
-    res.send(`Producto ${pid} eliminado`)
+    let response = await productModel.deleteOne({_id:pid})
+    console.log(response);
+    res.send(response)
+    
  })
 export default productosRoutes;

@@ -1,168 +1,111 @@
 import {Router} from "express";
 import {readFile, writeFile} from "fs/promises";
+import CartModel from "../models/cartModel.js";
 
+import ProductosModel from "../models/productModel.js";
+import cartModel from "../models/cartModel.js";
 export const cartsRoutes = Router();
-    //Funcion que verifica si existe el Id a ingresar
-    const modificarProductos=(carrito,pid) =>{
-        let productos = carrito.productosAMostrar;
-        const productoExistente = productos.find(item => item.productoId == pid)
-
-        if(productoExistente){
-            productoExistente.quantity+=1;
-
-        }
-        else{
-            productos.push({productoId: pid,quantity: 1})
-        
-        }
-        
-    return productos;
 
 
-    }
-    const consultarProd = async (products) => {
-    for (const item of products) {
-        if (typeof item === "number") {
-            try {
-                const response = await fetch(`http://localhost:5000/api/products/${item}`);
-                if (response.status === 404) {
-                    console.log(`Producto ${item} no encontrado.`);
-                    return false;
-                }
-            } catch (error) {
-                console.log(`Error consultando producto ${item}:`, error);
-                return false;
-            }
-        }
-    }
-    return true;
-}
-    class cart {
-        constructor() {
-        this.file = "./src/services/carrito.json";
-        this.cart=[];
-        }
-        //Funcion que crea un carrito
-        async crearCarrito(products){
-            try {
-                const continuar = await consultarProd(products);  
-
-                console.log(continuar);
-
-                if (continuar) {
-                    const data = await readFile(this.file, "utf-8");
-                    const cart = JSON.parse(data);
-                    const id = cart.length + 1;
-                    let productosAMostrar=[];
-                    for (const producto of products) {
-                         productosAMostrar.push({productoId:producto,quantity:1})
-                    }
-                    const newCart = { id, productosAMostrar };
-                    cart.push(newCart);
-
-                    await writeFile(this.file, JSON.stringify(cart, null, 2)); 
-                    console.log("Devolviendo 200");
-                    
-                    return 200;
-                } else {
-                    console.log("devolviendo 404");       
-                    return 404;
-                }
-            } catch (error) {
-                console.error("Error creando el carrito:", error);
-                return 500;  
-            }     
-            }
-        //Funcion que obtiene un carrito
-        async obtenerCarritoPorId(cid){
-            this.cart = JSON.parse(await readFile(this.file, "utf-8"));
-
-            let carritoSolicitado = this.cart.find(item => item.id == cid);
-            return carritoSolicitado;
-
-            
-        }
-        //Funcion que elimina un carrito
-        async deleteCart(cid){
-            console.log(cid);
-            const oldArrCart=JSON.parse( await readFile(this.file, "utf-8"));
-            const validarSiExiste = oldArrCart.filter(item => item.id == cid);
-            if(validarSiExiste){
-                this.cart = oldArrCart.filter(item => item.id != cid);
-                this.cart= JSON.stringify(this.cart);
-                console.log(this.cart);
-                
-                writeFile(this.file,this.cart);
-                return 200;
-            }
-            else{
-                return 404;
-            }
-
-        }
-        async postProduct (cid, pid) {
-            pid = parseInt(pid)
-            const response = await fetch(`http://localhost:5000/api/products/${pid}`)
-            console.log(response);
-            if( response.status == 404){
-                return 404
-            }
-            else{
-                const arrCart = JSON.parse(await readFile(this.file, "utf-8"));
-                this.cart=arrCart
-                const cartToModif = arrCart.find(item=> item.id == cid)
-
-                let cartIndex = this.cart.indexOf(cartToModif);
-                const productos = modificarProductos(cartToModif,pid);
-                this.cart[cartIndex].productosAMostrar=productos;
-                this.cart=JSON.stringify(this.cart )
-                writeFile(this.file,this.cart)
-                return 200;
-            }
-        }
-    }
-
-const cartArray = new cart();
 //Metodo Post 
 cartsRoutes.post("/", async (req,res) =>{
-    const {products} =req.body;
-    
-    console.log(products);
-    
-    let validacion= await cartArray.crearCarrito(products);
-
-    res.status(validacion).send(validacion == 200 ? "Producto creado" : "Error");
+        const response = await CartModel.create({products:[]});   
+        res.send(response._id);
 })
 //Metodo get by id
 cartsRoutes.get("/:cid", async (req,res) =>{
     const {cid} = req.params;
-    let carritoAMostrar = await cartArray.obtenerCarritoPorId(cid);
-
     
-    if(carritoAMostrar){
-        res.status(200).send(carritoAMostrar);
-
-    }
-    else{
-        res.status(404).send("No encontramos un carrito con ese id")
+    try {
+        const carrito = await CartModel.findById(cid).populate('products.producto');
+        if (!carrito) {
+            return res.status(404).send("Carrito no encontrado");
+        }
+        console.log("Cart found:", carrito);
+        res.json(carrito);
+    } catch (error) {
+        console.error("Error finding cart:", error);
+        res.status(500).send("Error interno del servidor");
     }
 })
 // Metodo delete
 cartsRoutes.delete("/:cid", async (req,res) =>{
     const {cid} = req.params;
-    let validacion= await cartArray.deleteCart(cid)
+    let validacion= await CartModel.deleteOne({_id:cid})
     console.log(validacion);
     
-    res.status(validacion).send(validacion== 200? "Producto eliminado":"No se encontró el carrito" )
+    res.send(validacion)
 
 })
+//Método deleteProd 
+cartsRoutes.delete("/:cid/product/:pid", async (req,res) =>{
+    const {cid,pid} = req.params;
+    const carrito = await CartModel.findOne({_id:cid});
+    const productosEnCarrito = carrito.products;
+    let continuar = true;
+    console.log("productosEnCarrito[0].producto._id",productosEnCarrito[0].producto.quantity);
+    
+    for(const element in productosEnCarrito) {
+        console.log(element);
+        
+        if(productosEnCarrito[element].producto._id == pid){
+        console.log(productosEnCarrito[element].quantity);
+            
+            if(productosEnCarrito[element].quantity <= 1){
+                const response= await CartModel.updateOne({ _id: cid },{ $pull: { 'products':{'product':productosEnCarrito[element].product } } });
+                console.log(response);
+                res.send(response);
+                
+                return continuar = false;
+                
+            }
+            else{console.log(element);
+                productosEnCarrito[element].quantity--;
+            
+                const response =await CartModel.updateOne({_id:cid,},{$set:{[`products.${element}.quantity`]:productosEnCarrito[element].quantity}});
+                console.log("response",response);
+                res.send(response);
+                return continuar = false;
+            }
+        }
+    }
+    if(continuar){
+        res.send("No se encontró el producto en el carrito")
+    }
+})
 // Método postProd
-cartsRoutes.post("/:cid/product/:pid",async (req,res) =>{
-    const {cid}= req.params;
-    const {pid} = req.params;
-    console.log(cid, pid);
-    let response =await cartArray.postProduct(cid,pid)
-    res.status(response).send(response== 200? "Producto añadido":"No se encontró el producto" )
+cartsRoutes.post("/:cid/product/:pid", async (req, res) => {
+    const { cid } = req.params;
+    const { pid } = req.params;
+    console.log("Cart ID:", cid, "Product ID:", pid);
+    
+    const product = ProductosModel.findOne({_id:pid});
+    if(product){
+        let continuar= true;
+        let carrito = await CartModel.findOne({_id:cid});
+        console.log("carrito products",carrito);
 
+        for (const e in carrito.products) {
+            let idLocal =carrito.products[e].producto._id;
+            if(idLocal == pid){
+               carrito.products[e].quantity ++;
+                const response = await CartModel.updateOne({_id:cid},carrito);
+                continuar = false;
+                res.status(200).send(response)
+            }
+            else{
+                continuar= true;
+            }
+        }
+           
+            
+        if(continuar ){
+            carrito.products.push({producto: pid});
+            const response = await CartModel.updateOne({_id:cid},carrito);
+            res.status(200).send(response)
+        }
+        
+    }
+    
 })
 export default cartsRoutes;

@@ -20,13 +20,24 @@ const httpServer = app.listen(port,() =>{
 
     
 })
+//definición de variable cartId
+let cartId="";
+//Conexión con mongoose
 mongoose.connect("mongodb+srv://augustodavidnoriega:Augus123@cluster0.9s6datl.mongodb.net/")
+//Definición de rutas
 app.use("/api/products",productosRouter);
 app.use("/api/carts",cartsRouter);
+
+//Socket 
 const socketServer = new Server(httpServer);
-socketServer.on("connection",socket =>{
+socketServer.on("connection",async socket =>{
+
+    
     console.log("Nuevo cliente conectado!");
 
+    
+    //Gestión de productos 
+    //Subir producto
     socket.on("subirProducto", async( newProduct) =>{
         let producto = JSON.stringify(newProduct);
         console.log("HOLAAAAA");
@@ -50,6 +61,7 @@ socketServer.on("connection",socket =>{
             socketServer.emit("errorVista",e )    
         }
     })
+    //Actualizar producto
     socket.on("updateProd", async(newProd,idProd) =>{
         let producto = JSON.stringify(newProd);
         
@@ -77,6 +89,7 @@ socketServer.on("connection",socket =>{
             socketServer.emit("errorVista",e )    
         }
     })
+    //Borrar producto
     socket.on("borrarProd",async(idProd) =>{
         
         try{
@@ -100,6 +113,39 @@ socketServer.on("connection",socket =>{
             socketServer.emit("errorVista",e )    
         }
     })
+
+    //Gestion de carrito
+
+    socket.on("addProd",async (idCart,idProd)=>{
+        console.log("ID Cart:",idCart,"ID prod:",idProd);
+        const res = await fetch(`http://localhost:5000/api/carts/${idCart}/product/${idProd}`,{
+            method:"POST"
+        })
+        if(res.status==200){
+        console.log(res.status);
+
+            socket.emit("exitoVista")
+        }
+        
+    })
+    socket.on("deleteProd",async (idCart,idProd)=>{
+        console.log("ID Cart:",idCart,"ID prod:",idProd);
+        const res = await fetch(`http://localhost:5000/api/carts/${idCart}/product/${idProd}`,{
+            method:"DELETE"
+        })
+        socket.emit("exitoVista");
+     
+    })
+    
+    socket.on("deleteCart", async(idCart)=>{
+        const res = await fetch(`http://localhost:5000/api/carts/${idCart}`,{
+            method:"DELETE"
+        })
+    console.log(res);
+        if(res.status == 200){
+            socket.emit("carritoBorrado")
+        };
+
+    })
+
 })
-
-
