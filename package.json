@@ -11,6 +11,7 @@
   "type": "module",
   "description": "",
   "dependencies": {
+    "bootstrap-icons": "^1.13.1",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.1",
     "mongoose": "^8.16.4",

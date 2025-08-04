@@ -1,5 +1,5 @@
 <a href="/products" class="btn btn-link mb-3" style="text-decoration: none;">
-    <i class="fas fa-arrow-left"></i> Volver a Productos
+<i class="bi bi-arrow-left fs-3 text-dark"  ></i>
 </a>
 
 
@@ -18,7 +18,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">
-                            <i class="fas fa-box"></i>
+                            <i class="bi bi-basket text-light me-2 "></i>
                             Productos en el carrito ({{products.length}})
                         </h5>
                     </div>
@@ -41,13 +41,13 @@
                                                 <button class="btn btn-sm btn-outline-secondary delete-product-btn" 
                                                         data-action="decrease" 
                                                         data-product-id="{{this.producto._id}}">
-                                                    <i class="fas fa-minus"></i>
+                                                        <i class="bi bi-dash-lg text-dark "></i>
                                                 </button>
                                                 <span class="quantity-display mx-2">{{this.quantity}}</span>
                                                 <button class="btn btn-sm btn-outline-secondary quantity-btn" 
                                                         data-action="increase" 
                                                         data-product-id="{{this.producto._id}}">
-                                                    <i class="fas fa-plus"></i>
+                                                        <i class="bi bi-plus-lg text-dark"></i>
                                                 </button>
                                             </div>
                                         </div>

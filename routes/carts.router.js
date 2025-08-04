@@ -4,6 +4,7 @@ import CartModel from "../models/cartModel.js";
 
 import ProductosModel from "../models/productModel.js";
 import cartModel from "../models/cartModel.js";
+import mongoose from "mongoose";
 export const cartsRoutes = Router();
 
 
@@ -21,8 +22,8 @@ cartsRoutes.get("/:cid", async (req,res) =>{
         if (!carrito) {
             return res.status(404).send("Carrito no encontrado");
         }
-        console.log("Cart found:", carrito);
-        res.json(carrito);
+        console.log( carrito);
+        res.send(carrito);
     } catch (error) {
         console.error("Error finding cart:", error);
         res.status(500).send("Error interno del servidor");
@@ -41,18 +42,18 @@ cartsRoutes.delete("/:cid", async (req,res) =>{
 cartsRoutes.delete("/:cid/product/:pid", async (req,res) =>{
     const {cid,pid} = req.params;
     const carrito = await CartModel.findOne({_id:cid});
+    
     const productosEnCarrito = carrito.products;
     let continuar = true;
-    console.log("productosEnCarrito[0].producto._id",productosEnCarrito[0].producto.quantity);
+    console.log("productosEnCarrito[0].producto._id",productosEnCarrito[0].producto);
     
     for(const element in productosEnCarrito) {
         console.log(element);
         
         if(productosEnCarrito[element].producto._id == pid){
-        console.log(productosEnCarrito[element].quantity);
-            
-            if(productosEnCarrito[element].quantity <= 1){
-                const response= await CartModel.updateOne({ _id: cid },{ $pull: { 'products':{'product':productosEnCarrito[element].product } } });
+            if(productosEnCarrito[element].quantity <= 1 || productosEnCarrito[element].quantity == 0){
+                let productToModify = productosEnCarrito[element].producto;              
+                const response= await CartModel.updateOne({ _id: cid },{ $pull: {'products':{ 'producto':productToModify } } });
                 console.log(response);
                 res.send(response);
                 
@@ -83,7 +84,7 @@ cartsRoutes.post("/:cid/product/:pid", async (req, res) => {
     if(product){
         let continuar= true;
         let carrito = await CartModel.findOne({_id:cid});
-        console.log("carrito products",carrito);
+        
 
         for (const e in carrito.products) {
             let idLocal =carrito.products[e].producto._id;
@@ -91,7 +92,8 @@ cartsRoutes.post("/:cid/product/:pid", async (req, res) => {
                carrito.products[e].quantity ++;
                 const response = await CartModel.updateOne({_id:cid},carrito);
                 continuar = false;
-                res.status(200).send(response)
+                res.send(response)
+                break;
             }
             else{
                 continuar= true;
@@ -102,7 +104,7 @@ cartsRoutes.post("/:cid/product/:pid", async (req, res) => {
         if(continuar ){
             carrito.products.push({producto: pid});
             const response = await CartModel.updateOne({_id:cid},carrito);
-            res.status(200).send(response)
+            res.send(response)
         }
         
     }

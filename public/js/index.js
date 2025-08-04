@@ -1,5 +1,34 @@
 const socketServer = io();
 
+let cartId;
+const cartLink = document.querySelector("#cartLink");
+const cartIcon = document.querySelector("#cartIcon");
+const quantityText = document.querySelector("#quantityCart")
+const cartExistIcon = document.querySelector("#cartExistIcon")
+console.log(cartLink.getAttribute("href"));
+const comprobarIdCart = async () =>{
+    const storagedCartId = localStorage.getItem("cartId");
+    if(storagedCartId){
+        cartId = storagedCartId; 
+        console.log(" si hay carrito y su iD es:",storagedCartId);
+        cartLink.setAttribute("href","http://localhost:5000/carts/"+ storagedCartId)
+        cartIcon.classList.remove("disabled")
+        cartExistIcon.classList.remove("d-none")
+        
+    }   
+
+    
+    else{
+        console.log("No hay carrito");
+        cartLink.setAttribute("href","#")
+        cartIcon.classList.add("disabled")
+        cartExistIcon.classList.add("d-none")
+
+    }
+}
+window.addEventListener("load", function(){
+    comprobarIdCart();
+})
 socketServer.on("realTimeProducts", productos =>{
     const contenido = document.getElementById("productList");
     let contenidoHTML = "";

@@ -4,57 +4,119 @@ const carritoElement = document.querySelector("#carrito");
 //Funciones 
 const reloadPage = () =>{
     location.reload();
-}
-const handleQuantityChange=(event) =>{
-    console.log("handleQuantityChange called");
-    const boton = event.target;
-    let action = boton.getAttribute("data-action");
-    let productId = boton.getAttribute("data-product-id");
-    
-    console.log("Action:", action, "Product ID:", productId);
-    
-    if(action == "increase"){
-        const carrito = document.getElementById("carrito");
-        const cartId = carrito.getAttribute('data-idCart');
-        console.log("Emitting addProd with cartId:", cartId, "productId:", productId);
-        socket.emit("addProd", cartId, productId);
-    }
-}
+};
 
-const handleDeleteProduct = (event)=>{
-    console.log("handleDeleteProduct called");
-    const boton = event.target;
-    const action = boton.getAttribute("data-action");
-    const productId = boton.getAttribute("data-product-id");
+const calculateTotals = () => {
+    const productsItems = document.querySelectorAll(".product-item");
+    let subtotal = 0;
+
+    productsItems.forEach(item => {
+        const priceElement = item.querySelector(".priceElement");
+        const quantityElement = item.querySelector(".quantity-display");
+        
+        if (priceElement && quantityElement) {
+            const priceText = priceElement.textContent;
+            const quantityText = quantityElement.textContent;
+            
+            const price = parseFloat(priceText.replace('$', ''));
+            const quantity = parseFloat(quantityText);
+            
+            if (!isNaN(price) && !isNaN(quantity)) {
+                subtotal += price * quantity;
+            }
+        }
+    });
+
+    const subtotalElement = document.getElementById('subtotal');
+    const totalElement = document.getElementById('total');
     
-    if(action == "decrease"){
-        const carrito = document.getElementById("carrito");
-        const cartId = carrito.getAttribute('data-idCart');
-        console.log("Emitting deleteProd with cartId:", cartId, "productId:", productId);
+    if (subtotalElement) {
+        subtotalElement.textContent = "$" + subtotal.toFixed(2);
+    }
+    if (totalElement) {
+        totalElement.textContent = "$" + subtotal.toFixed(2);
+    }
+};
+
+// Event handlers
+const handleQuantityChange = (event) => {
+    const button = event.target;
+    const action = button.getAttribute("data-action");
+    const productId = button.getAttribute("data-product-id");
+    
+    if (!action || !productId) {
+        console.error("Missing action or productId");
+        return;
+    }
+    
+    const carrito = document.getElementById("carrito");
+    if (!carrito) {
+        console.error("Carrito element not found");
+        return;
+    }
+    
+    const cartId = carrito.getAttribute('data-idCart');
+    if (!cartId) {
+        console.error("Cart ID not found");
+        return;
+    }
+    
+    if (action === "increase") {
+        socket.emit("addProd", cartId, productId);
+    } else if (action === "decrease") {
         socket.emit("deleteProd", cartId, productId);
     }
-}    
-const handleDeleteCart =(event) =>{
-    console.log("handleDeleteCart");
-   const boton = event.target;
-   const localCartId = boton.getAttribute("data-cart-id");
-    socket.emit("deleteCart",localCartId)
-    localStorage.setItem("cartId","");
-    
-    
-    }
+};
 
-    //Definicion de sockets
-socket.on("exitoVista", (e) => {
-    console.log("EXITO VISTA");
+const handleDeleteProduct = (event) => {
+    const button = event.target;
+    const productId = button.getAttribute("data-product-id");
+    
+    if (!productId) {
+        console.error("Missing productId");
+        return;
+    }
+    
+    const carrito = document.getElementById("carrito");
+    if (!carrito) {
+        console.error("Carrito element not found");
+        return;
+    }
+    
+    const cartId = carrito.getAttribute('data-idCart');
+    if (!cartId) {
+        console.error("Cart ID not found");
+        return;
+    }
+    
+    socket.emit("deleteProd", cartId, productId);
+};
+
+const handleDeleteCart = (event) => {
+    const button = event.target;
+    const cartId = button.getAttribute("data-cart-id");
+    
+    if (!cartId) {
+        console.error("Missing cart ID");
+        return;
+    }
+    
+    socket.emit("deleteCart", cartId);
+    localStorage.setItem("cartId", "");
+};
+
+// Definición de Sockets
+socket.on("exitoVista", (data) => {
+    console.log("EXITO VISTA", data);
     
     Swal.fire({
         icon: "success",
         title: "Operacion procesada con éxito",
         showConfirmButton: true,
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
+        timer: 2000
     }).then((result) => {
-        // Only reload if the user actually confirmed (clicked "Ok")
+        
         if (result.isConfirmed) {
             reloadPage();
         }
@@ -68,7 +130,7 @@ socket.on("errorVista", (e) => {
         title: "Error en la operación",
         showConfirmButton: true,
         confirmButtonText: "Ok"
-    }).then((result) => {
+    }).then(() => {
         reloadPage();
     });
 });
@@ -83,8 +145,14 @@ socket.on("notFoundVista", (e) => {
         confirmButtonText: "Ok"
     });
 });
-socket.on("carritoBorrado", () =>{
-    carritoElement.innerHTML =`
+
+socket.on("carritoBorrado", () => {
+    if (!carritoElement) {
+        console.error("Carrito element not found for update");
+        return;
+    }
+    
+    carritoElement.innerHTML = `
         <div class="empty-cart-container">
             <div class="empty-cart-animation">
                 <div class="cart-icon-wrapper">
@@ -215,36 +283,37 @@ socket.on("carritoBorrado", () =>{
         color: 'white'
     });
 });
-const calculateTotals = () =>{
-    const productsItems = document.querySelectorAll(".product-item");
-    
-    let subtotal =0;
 
-    productsItems.forEach(item =>{
-       const priceElement = item.querySelector(".priceElement")
-       const priceText = priceElement.textContent;
-        const quantityElement = item.querySelector(".quantity-display")
-        console.log("Obteniendo precios :D");
-        
-        const price = parseFloat(priceText.replace('$',''));
-        const quantity = parseFloat(quantityElement.textContent)
-        subtotal += price*quantity
-        console.log(price,quantity);
-        
-    })
-    const subtotalElement = document.getElementById('subtotal');
-    const totalElement = document.getElementById('total');
-    subtotalElement.textContent = "$"+subtotal.toFixed(2);
-    totalElement.textContent = "$"+subtotal.toFixed(2); 
-    
-    console.log(`$${subtotal.toFixed(2)}`);
-    console.log(`$${subtotal.toFixed(2)}`);
-    console.log("calculando total");
 
-}
-window.addEventListener("load",function() {
-    calculateTotals()
-})
+const setupEventListeners = () => {
+    // Eliminando eventListeners para evitar duplicación
+    document.removeEventListener('click', handleQuantityChange);
+    document.removeEventListener('click', handleDeleteProduct);
+    document.removeEventListener('click', handleDeleteCart);
+    
+    // Añadiendo eventListener a quantityBtn
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('quantity-btn')) {
+            handleQuantityChange(event);
+        }
+    });
+    
+    // Añadiendo eventListener a deleteProductBtn
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-product-btn')) {
+            handleDeleteProduct(event);
+        }
+    });
+    
+    // Añadiendo eventListener a clearCartBtn
+    document.addEventListener('click', (event) => {
+        if (event.target.id === 'clear-cart-btn') {
+            handleDeleteCart(event);
+        }
+    });
+};
+
+// Inicializar luego de que el DOM esté cargado
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM loaded, setting up event listeners");
     
@@ -257,21 +326,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartId = carrito.getAttribute('data-idCart');
     console.log("Cart ID:", cartId);
     
-    // Botones de cantidad
-    document.querySelectorAll('.quantity-btn').forEach(btn => {
-        btn.addEventListener('click', handleQuantityChange);
-    });
+    // Definir los EventListeners
+    setupEventListeners();
     
-    // Boton borrar producto
-    document.querySelectorAll('.delete-product-btn').forEach(btn => {
-        btn.addEventListener('click', handleDeleteProduct);
-    });
-    
-    // Boton borrar carrito
-    const clearCartBtn = document.getElementById('clear-cart-btn');
-    if (clearCartBtn) {
-        clearCartBtn.addEventListener('click', handleDeleteCart);
-    }
+    // Calcular totales 
+    calculateTotals();
+});
 
-
+// Recalcular los subtotales luego de cargar la pagina
+window.addEventListener("load", function() {
+    calculateTotals();
 });

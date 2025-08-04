@@ -4,20 +4,26 @@ const btnComprar = document.getElementById('comprarBtn');
 const productId = btnComprar.getAttribute("data-idProd");
 const cartLink = document.querySelector("#cartLink");
 const cartIcon = document.querySelector("#cartIcon")
+const cartExistIcon = document.querySelector("#cartExistIcon")
 console.log(cartLink.getAttribute("href"));
-const comprobarIdCart = () =>{
+const comprobarIdCart = async () =>{
     const storagedCartId = localStorage.getItem("cartId");
     if(storagedCartId){
         cartId = storagedCartId; 
         console.log(" si hay carrito y su iD es:",storagedCartId);
         cartLink.setAttribute("href","http://localhost:5000/carts/"+ storagedCartId)
         cartIcon.classList.remove("disabled")
-    }
+        cartExistIcon.classList.remove("d-none")
+        
+    }   
+
     
     else{
         console.log("No hay carrito");
         cartLink.setAttribute("href","#")
         cartIcon.classList.add("disabled")
+        cartExistIcon.classList.add("d-none")
+
     }
 }
 window.addEventListener("load",() =>{
@@ -65,7 +71,8 @@ btnComprar.addEventListener("click", async(e) => {
         cartLink.setAttribute("href","http://localhost:5000/carts/"+ cartId)
         cartIcon.classList.remove("disabled")
             localStorage.setItem("cartId",cartId)
-            console.log("Id guardado en local storage (debería funcionar)");
+            
+            comprobarIdCart();
             
         }
         catch(e){
