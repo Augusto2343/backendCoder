@@ -4,28 +4,7 @@ let cartId;
 const cartLink = document.querySelector("#cartLink");
 const cartIcon = document.querySelector("#cartIcon");
 const quantityText = document.querySelector("#quantityCart")
-const cartExistIcon = document.querySelector("#cartExistIcon")
-console.log(cartLink.getAttribute("href"));
-const comprobarIdCart = async () =>{
-    const storagedCartId = localStorage.getItem("cartId");
-    if(storagedCartId){
-        cartId = storagedCartId; 
-        console.log(" si hay carrito y su iD es:",storagedCartId);
-        cartLink.setAttribute("href","http://localhost:5000/carts/"+ storagedCartId)
-        cartIcon.classList.remove("disabled")
-        cartExistIcon.classList.remove("d-none")
-        
-    }   
 
-    
-    else{
-        console.log("No hay carrito");
-        cartLink.setAttribute("href","#")
-        cartIcon.classList.add("disabled")
-        cartExistIcon.classList.add("d-none")
-
-    }
-}
 window.addEventListener("load", function(){
     comprobarIdCart();
 })
@@ -100,10 +79,10 @@ document.getElementById('updateProductForm').addEventListener('submit', function
     socketServer.emit("updateProd", newProd,idProd)
 
 });
-socketServer.on("errorVista", (e) =>{
+socketServer.on("errorVista", async(res) =>{
     Swal.fire({
         icon:"error",
-        title:"Hubo un error al cargar el producto"
+        title:`Hubo un error al cargar el producto:${res}`
     })
 })
 socketServer.on("exitoVista", (e) =>{

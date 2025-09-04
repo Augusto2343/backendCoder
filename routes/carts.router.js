@@ -1,9 +1,9 @@
 import {Router} from "express";
 import {readFile, writeFile} from "fs/promises";
-import CartModel from "../models/cartModel.js";
+import CartModel from "../daos/models/cartModel.js";
 
-import ProductosModel from "../models/productModel.js";
-import cartModel from "../models/cartModel.js";
+import ProductosModel from "../daos/models/productModel.js";
+import cartModel from "../daos/models/cartModel.js";
 import mongoose from "mongoose";
 export const cartsRoutes = Router();
 

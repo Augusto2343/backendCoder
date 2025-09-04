@@ -16,6 +16,7 @@
   <thead>
     <tr>
       
+      <th scope="col">ID</th>
       <th scope="col">Titulo</th>
       
       <th scope="col">Precio</th>
@@ -31,7 +32,7 @@
   {{#each productos.docs}}
 
     <tr>
-      
+      <td>{{this._id}}</td>
       <td>{{this.title}}</td>
       <td>{{this.price}}</td>
       <td>{{this.stock}}</td>

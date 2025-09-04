@@ -1,33 +1,43 @@
-    import express from "express";
+import express from "express";
 import handlebars from "express-handlebars";
+import cookieParser from "cookie-parser";
 import productosRouter from "./routes/productos.router.js";
 import cartsRouter from "./routes/carts.router.js";
+import userRouter from "./routes/usersRouters.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
 import viewsRouter from "./routes/views.router.js"
 import mongoose from "mongoose";
+import config from "./config/config.js";
+import "./middlewares/passport/passport-jwt.js";
+import passport from "passport";
 const app = express();
-const port = 5000;
+const port = config.PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + "/public"))
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname +"/views");
 app.set("view engine", "handlebars");
-app.use("/",viewsRouter)
+
 const httpServer = app.listen(port,() =>{
     console.log("Servidor activo en puerto:",port);
 
     
 })
+//Inicializacion de cookieparser
+app.use(cookieParser());
+//Inicializacion de passport 
+app.use(passport.initialize());
 //definición de variable cartId
 let cartId="";
 //Conexión con mongoose
-mongoose.connect("mongodb+srv://augustodavidnoriega:Augus123@cluster0.9s6datl.mongodb.net/")
+mongoose.connect(config.MONGO_URL)
 //Definición de rutas
 app.use("/api/products",productosRouter);
 app.use("/api/carts",cartsRouter);
-
+app.use("/api",userRouter)
+app.use("/",viewsRouter)
 //Socket 
 const socketServer = new Server(httpServer);
 socketServer.on("connection",async socket =>{
@@ -73,7 +83,8 @@ socketServer.on("connection",async socket =>{
                 body: producto
             })
             console.log("Se updateó :D");
-            console.log(res);
+            let msj = await res.json();
+            console.log(msj);
             switch(res.status) {
                 case 200:
                 socketServer.emit("exitoVista",res)  
@@ -81,8 +92,11 @@ socketServer.on("connection",async socket =>{
                 case 404:
                 socketServer.emit("notFoundVista",res)
                 break;
+                case 400:
+                socketServer.emit("errorVista",res)
+                break;
                 default:                
-                socketServer.emit("errorVista",e )    
+                socketServer.emit("errorVista",res )    
                 break;
             }
         }catch(e){
@@ -97,16 +111,18 @@ socketServer.on("connection",async socket =>{
                 method:"DELETE",
             })
             console.log("Se elimino :D");
-            console.log(res);
+            let msj = await res.json();
+            console.log(msj);
+            
             switch(res.status) {
                 case 200:
-                socketServer.emit("exitoVista",res)  
+                socketServer.emit("exitoVista",msj.message)  
                 break;
                 case 404:
-                socketServer.emit("notFoundVista",res)
+                socketServer.emit("notFoundVista",msj.message)
                 break;
                 default:
-                socketServer.emit("errorVista",e )    
+                socketServer.emit("errorVista",msj.message)    
                 break;
             }
         }catch(e){

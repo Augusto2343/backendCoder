@@ -1,14 +1,18 @@
 import express from "express"
-import productosModel from "../models/productModel.js";
-import CartModel  from "../models/cartModel.js";
+import productosModel from "../daos/models/productModel.js";
+import CartModel  from "../daos/models/cartModel.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
+import { passportCall } from "../middlewares/passport/passport-call.js";
 const viewRouter = express.Router();
 
- viewRouter.get("/", (req, res) =>{
-      res.render("home");
+ viewRouter.get("/", passportCall("current",{session:false}),(req, res) =>{
+    const payload = req.user;
+
+      res.render("home",payload);
  })
 
  //Vista lista productos
-viewRouter.get("/products", async(req,res) =>{
+viewRouter.get("/products", passportCall("current",{session:false}), async(req,res) =>{
     const {limit} = req.query;
     const {page} =req.query;
     console.log(limit);
@@ -18,7 +22,7 @@ viewRouter.get("/products", async(req,res) =>{
     res.render("products",{productos})
 })
 //Vista detalle de producto 
-viewRouter.get("/products/:pid", async(req,res) =>{
+viewRouter.get("/products/:pid", passportCall("current",{session:false}),async(req,res) =>{
     const {pid} = req.params;
     console.log(pid);
     
@@ -29,7 +33,7 @@ viewRouter.get("/products/:pid", async(req,res) =>{
 })
 
 //Vista carrito
-viewRouter.get("/carts/:cid", async(req,res) =>{
+viewRouter.get("/carts/:cid", passportCall("current",{session:false}), async(req,res) =>{
     const {cid} = req.params;
     
     try {
@@ -47,4 +51,22 @@ viewRouter.get("/carts/:cid", async(req,res) =>{
         res.status(500).send("Error interno del servidor");
     }
 })
+viewRouter.get("/login", (req,res) =>{
+    const {error} =req.query;
+    const {name,message} = req.query;
+    console.log(error);
+    console.log(name, message);
+    
+    res.render("login",{error,name,message});
+})
+viewRouter.get("/register",(req,res)=>{
+    res.render("register");
+})
+
+viewRouter.get("/profile", passportCall("current",{session:false}) , (req,res) =>{
+    const payload=req.user
+    console.log(payload);
+    res.render("profile", {payload})
+})
+
 export default viewRouter
