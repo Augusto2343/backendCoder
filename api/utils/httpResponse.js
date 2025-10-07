@@ -1,0 +1,59 @@
+const HttpStatus ={
+    OK:200,
+    CREATED:201,
+    NOT_FOUND:401,
+    BAD_REQUEST: 400,
+    FORBIDDEN:403,
+    INTERNAL_SERV_ERR:500
+}
+
+class HttpResponse {
+    Ok(res,data){
+        res.status(HttpStatus.OK,).json({
+            status:HttpStatus.OK,
+            data:data
+        })
+    }
+    Created(res,data){
+        res.status(HttpStatus.OK,).json({
+            status:HttpStatus.OK,
+            data:data
+        })
+    }
+    BadReq(res,error){
+        res.status(HttpStatus.BAD_REQUEST,).json({
+            status:HttpStatus.BAD_REQUEST,
+            message:error.message,
+            error:error.name
+        })
+    }
+    NotFound(res,error){
+        res.status(HttpStatus.NOT_FOUND,).json({
+            status:HttpStatus.NOT_FOUND,
+            message:error.message,
+            error:error.name
+        })
+    }
+    Forbidden(res,error){
+        res.status(HttpStatus.FORBIDDEN,).json({
+            status:HttpStatus.FORBIDDEN,
+            message:error.message,
+            error:error.name
+        })
+    }
+    InternalServErr(res,error){
+        res.status(HttpStatus.INTERNAL_SERV_ERR,).json({
+            status:HttpStatus.INTERNAL_SERV_ERR,
+            message:error.message,
+            error:error.name
+        })
+    }
+    CustomError(res,error){
+        res.status(error.status).json({
+            status:error.status,
+            message:error.message,
+            error:error.name
+        })
+    }
+}
+export const httpResponse = new HttpResponse();
