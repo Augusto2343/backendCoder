@@ -28,5 +28,12 @@ class UserRepository{
             throw error;
         }
     }
+    update = async(body)=>{
+        try {
+            return await this.dao.update(body)
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 export const userRepository= new UserRepository(userDao, cartDao)

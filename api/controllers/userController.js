@@ -41,5 +41,13 @@ class UserController {
             next(error)
         }
     }
+    logout = async(req,res,next)=>{
+        try {
+            res.clearCookie("token");
+            res.status(200).send("Deslogueado correctamente");
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 export const userController = new UserController(userService);

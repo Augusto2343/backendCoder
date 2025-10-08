@@ -5,9 +5,12 @@ class TicketRepository {
         this.dao = dao;
     }
 
-    create= async() =>{
-        console.log("AIAIAI");
-        
+    create= async(invoice) =>{
+        try {
+            return await this.dao.create(invoice)
+        } catch (error) {
+            throw error
+        }
     }
 }
 export const ticketRepository = new TicketRepository(ticketDao)

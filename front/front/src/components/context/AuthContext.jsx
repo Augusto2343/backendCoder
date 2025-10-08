@@ -1,5 +1,5 @@
 import { createContext, useContext, useState,useEffect } from "react";
-
+import Swal from "sweetalert2";
 const AuthContext = createContext();
 export const useAuth = () =>{
     const context = useContext(AuthContext);
@@ -91,12 +91,35 @@ export const AuthProvider = ({children}) =>{
           return { success: false, error: 'Registration failed' };
         }
       };
+      const logout = async() =>{
+        try {
+          const response = await fetch('http://localhost:5000/api/logout',{
+            method: 'GET',
+            credentials: 'include'
+          })
+          if(response.ok){
+            Swal.fire({
+              title:"Deslogueado correctamente",
+              icon:"success"
+            })
+            setUser(null);
+            setIsAuthenticated(false);
+          
+          }
+        } catch (error) {
+          Swal.fire({
+            title:"Error al desloguear",
+            icon:"error"
+          })
+        }
+      }
       const value = {
         user,
         isAuthenticated,
         isLoading,
         login,
         register,
+        logout,
         checkAuthStatus
       }
       return(

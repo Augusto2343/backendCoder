@@ -8,4 +8,5 @@ router.post("/login",userController.login);
 router.get("/session/current", passportCall("current",{session:false}) ,(req,res)=>{
     res.send(req.user)
 })
+router.get("/logout",userController.logout);
 export default router;

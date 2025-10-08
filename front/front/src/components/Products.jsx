@@ -5,7 +5,7 @@ import { useAuth } from "./context/AuthContext";
 import Error from "./Error";
 
 const Products = ()=>{
-    const {isAuthenticated} = useAuth()
+    const {isAuthenticated,user} = useAuth();
     const { getProducts } = useProdContext();
     const [products,setProducts] = useState([]);
     const obtainProducts = async() =>{
@@ -14,7 +14,8 @@ const Products = ()=>{
     }
     useEffect(() =>{
         obtainProducts();
-    },[])
+        
+    },[user])
     return(
         isAuthenticated ?
         <>
@@ -31,6 +32,17 @@ const Products = ()=>{
             ))
         }
         </div>
+        {      
+        user.role==="admin" ?
+        <button className="p-3 bg-blue-900/20 shadow-sm/10 hover:shadow-lg/30 hover:bg-blue-900/70 duration-400 rounded-lg mt-2" onClick={()=>{
+            handleAddProduct();
+        }}>Administrar productos</button>
+        :
+        <>  
+        </>
+
+        }
+
         </>
     :
     <Error  mensaje={"Sesión expirada"} type="sessionExp"></Error>

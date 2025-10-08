@@ -61,10 +61,10 @@ export const CartProvider = ({children}) =>{
             })
         }
     }
-    const deleteProdFromCart = async(id) => {
+    const deleteProdFromCart = async(id,idProd) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/products/${id}`,{
-                method:"GET",
+            const response = await fetch(`http://localhost:5000/api/carts/${id}/product/${idProd}`,{
+                method:"DELETE",
                 credentials:"include"
             })
             if(!response.ok){
@@ -75,8 +75,13 @@ export const CartProvider = ({children}) =>{
                 })
             }
             else{
-                const data = await response.json();
-                return data;
+                Swal.fire({
+                    title:"Producto eliminado del carrito",
+                    icon:"success"
+                })
+                setTimeout(()=>{
+                    location.reload()
+                },1000)
             }
             
         } catch (error) {
@@ -86,11 +91,37 @@ export const CartProvider = ({children}) =>{
             })
         }
     }
+    const createInvoice = async(idCart,idUser) =>{
+        try {
+            const response = await fetch(`http://localhost:5000/api/ticket/${idCart}/${idUser}`,{
+                method:"POST",
+                credentials:"include"
+            })
+            if(!response.ok){
+                Swal.fire({
+                    title:"Error al crear la factura",
+                    icon:"error"
+                })
+            }
+            else{
+                Swal.fire({
+                    title:"Factura creada",
+                    icon:"success"
+                })
+            }
+        } catch (error) {
+            Swal.fire({
+                title:"Error al crear la factura",
+                icon:"error"
+            })
+        }
+    }
 
 const value = {
     getCartData,
     postProdToCart,
-    deleteProdFromCart
+    deleteProdFromCart,
+    createInvoice
   }
   return(
     <CartContext.Provider value={value}>

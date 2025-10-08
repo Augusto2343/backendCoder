@@ -4,9 +4,9 @@ class TicketController {
         this.service= service;
     }
     create = async(req,res,next)=>{
-        const {idCart,user} = req.body;
-        console.log(idCart,user);
-        const response =await this.service.create(idCart,user)
+        const {idCart,emailUser}= req.params;
+        console.log(idCart,emailUser);
+        const response =await this.service.create(idCart,emailUser)
         console.log(response);
         
     }

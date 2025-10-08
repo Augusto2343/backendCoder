@@ -4,6 +4,7 @@ import { cartRepository } from "../repositories/cartRepositories.js";
 import { userRepository } from "../repositories/userRepositories.js";
 import CustomError from "../utils/custom-error.js";
 import { createHash,isValidPassword } from "../utils/user-utils.js";
+import mongoose from "mongoose";
 
 class UserService {
     constructor(repository,cartRepo){
@@ -79,5 +80,6 @@ class UserService {
             throw error;
         }
     }
+
 }
 export const userService = new UserService(userRepository,cartRepository)

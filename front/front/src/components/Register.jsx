@@ -14,7 +14,7 @@ const Register = () => {
     const [imgProfile, setImgProfile] = useState();
     const handleSubmit = async(e) => {
         e.preventDefault();
-        const userData = {first_name:nombre,last_name:apellido,age:age, password:password,email:email, role:role}
+        const userData = {first_name:nombre,last_name:apellido,age:age,imgProfile:imgProfile, password:password,email:email, role:role}
         try {
             const response = await register(userData)
             if(response.error){
@@ -131,7 +131,7 @@ const Register = () => {
                         </div>
                         <div>
                             <label htmlFor="imgProfile" className="block text-sm font-medium text-gray-700 mb-2">
-                                Email
+                                Imagen de perfil
                             </label>
                             <input 
                                 type="text" 

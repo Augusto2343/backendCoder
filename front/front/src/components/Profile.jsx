@@ -5,10 +5,12 @@ import { useCartContext } from "./context/cartContext";
 import { useEffect, useState } from "react";
 
 const Profile = () =>{
-    const {user,isAuthenticated} = useAuth();
+    const {user,logout,isAuthenticated} = useAuth();
     const {getCartData} = useCartContext();
     const [cartQuantity, setCartQuantity] = useState();
-
+    const handleLogout = async() =>{
+        await logout();
+    }
     return (
         isAuthenticated ?
         <>
@@ -25,11 +27,16 @@ const Profile = () =>{
                         <div className="bg-white/10 backdrop-blur rounded-xl p-6 border border-white/10 shadow-xl">
                             <div className="flex flex-col items-center text-center">
                                 <div className="h-24 w-24 rounded-full bg-teal-600 text-white flex items-center justify-center text-3xl font-semibold shadow-md">
-                                    { "U"}
+                                    {user.imgProfile ? 
+                                    
+                                    <img src={user.imgProfile} alt="Profile" className="h-24 w-24 rounded-full" />
+                                    :
+                                    "U"
+                                    }
                                 </div>
                                 <h2 className="mt-4 text-xl font-semibold text-white">{user.last_name} {user.first_name}</h2>
                                 <p className="mt-1 text-sm text-gray-300">{user.email }</p>
-
+                                <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md z-10 hover:bg-red-600 hover:shadow-lg/20" onClick={(e)=>{handleLogout()}}>Logout</button>
                             </div>
                         </div>
                     </div>
