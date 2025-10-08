@@ -10,6 +10,7 @@ import ProductDetail from './components/ProductDetail'
 import Login from './components/Login'
 import Register from './components/Register'
 import Profile from './components/Profile'
+import Invoice from './components/Invoice'
 import NotFound from './components/NotFound'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -28,6 +29,7 @@ import { CartProvider } from './components/context/cartContext'
     <BrowserRouter>
     
     <Header/>
+    <section className='h-screen w-full flex flex-col align-center justify-center'>
     <Routes>
       <Route path="/" element={<Home />}></Route>
       <Route path="/products" element={<Products />}></Route>
@@ -36,8 +38,10 @@ import { CartProvider } from './components/context/cartContext'
       <Route path="/login" element={<Login />}></Route>
       <Route path="/register" element={<Register />}></Route>
       <Route path="/profile" element={<Profile />}></Route>
+      <Route path="/invoice/:ticketId" element={<Invoice />}></Route>
       <Route path="/*" element={<NotFound />}></Route>
     </Routes>
+    </section>
     <Footer>
 
     </Footer>

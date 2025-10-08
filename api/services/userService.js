@@ -43,6 +43,17 @@ class UserService {
                 throw error;
             }
         }
+        update = async(id,body)=>{
+            try {
+
+                const response = await this.repo.update(id,body)
+                if(!response) throw new CustomError("Error al actualizar usuario")
+                this.generateToken(response);
+                return response;
+            } catch (error) {
+                throw error
+            }
+        }
         /**
          * Esta función genera el token del usuario para mantenerse logueado por 19 minutos.
          * @param {object} user 
@@ -56,7 +67,8 @@ class UserService {
                 role: user.role,
                 age:user.age,
                 imgProfile:user.imgProfile,
-                cartId:user.cartId
+                cartId:user.cartId,
+                tickets:user.tickets
             }
             return jwt.sign(payload, config.SECRET_KEY,{
                 expiresIn:"19m"
@@ -74,6 +86,7 @@ class UserService {
                 if(!userExist) throw new CustomError("Credenciales incorrectas",400);
                 const passValid = isValidPassword(password,userExist.password);
                 if(!passValid) throw new CustomError("Credenciales incorrectas",400);
+
                 return userExist;
     
         }catch(error){

@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext"
 import Error from "./Error";
 import { useCartContext } from "./context/cartContext";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Cart = () =>{
     const {user,isAuthenticated,} = useAuth();
     const {getCartData,postProdToCart,deleteProdFromCart,createInvoice} = useCartContext();
     const [cart,setCart] = useState(null);
+    const navigate = useNavigate();
     const obtainCart = async () =>{
         if (!user?.cartId) return;
         const cartData = await getCartData(user.cartId);
@@ -22,7 +25,25 @@ const Cart = () =>{
         const response = await deleteProdFromCart(user.cartId,e.target.id);
     }
     const handleCreateInvoice = async(idCart,idUser) =>{
-        const response = await createInvoice(user.cartId);
+        console.log(idCart,idUser);
+        
+        const result = await createInvoice(idCart, idUser);
+        if(!result?.ok){
+            Swal.fire({
+                title:"Error al crear la factura",
+                icon:"error"
+            })
+            return;
+        }
+        const ticket = result.data;
+        await Swal.fire({
+            title:"Factura creada",
+            icon:"success"
+        });
+        if(ticket?.code || ticket?._id){
+            const ticketId = ticket._id ?? ticket.code;
+            navigate(`/invoice/${ticketId}`);
+        }
     }
     useEffect(() =>{
         obtainCart()
@@ -85,7 +106,7 @@ const Cart = () =>{
                                         }, 0)).toFixed(2)}
                                     </td>
                                     <td className="px-6 py-4 text-right text-sm font-bold text-gray-900">
-                                        <button className="bg-gray-600/20 p-1 rounded-lg hover:bg-gray-700/70" onClick={()=>{handleCreateInvoice(user.cartId,user._id)}}>Crear factura</button>
+                                        <button className="bg-gray-600/20 p-1 rounded-lg hover:bg-gray-700/70" onClick={()=>{handleCreateInvoice(user.cartId,user.email)}}>Crear factura</button>
                                     </td>
                                 </tr>
                             </tfoot>

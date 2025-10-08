@@ -12,5 +12,12 @@ class TicketRepository {
             throw error
         }
     }
+    getById = async(id) =>{
+        try {
+            return await this.dao.getById(id);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 export const ticketRepository = new TicketRepository(ticketDao)

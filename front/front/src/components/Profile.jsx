@@ -69,6 +69,10 @@ const Profile = () =>{
                                         <dt className="text-sm font-medium text-gray-500">Edad</dt>
                                         <dd className="mt-1 text-gray-900">{user.age}</dd>
                                     </div>
+                                    <div>
+                                        <dt className="text-sm font-medium text-gray-500">Invoices</dt>
+                                        <dd className="mt-1 text-gray-900">{user.tickets}</dd>
+                                    </div>
                                 </dl>
                             </div>
                         </div>

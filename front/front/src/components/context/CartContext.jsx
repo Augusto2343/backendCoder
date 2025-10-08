@@ -98,30 +98,42 @@ export const CartProvider = ({children}) =>{
                 credentials:"include"
             })
             if(!response.ok){
+                return { ok: false, error: true }
+            }
+            else{
+                const data = await response.json();
+                return { ok: true, data }
+            }
+        } catch (error) {
+            return { ok: false, error: true }
+        }
+    }
+    const getTicket = async (id) =>{
+        try {
+            const response = await fetch(`http://localhost:5000/api/ticket/${id}`,{
+                method:"GET",
+                credentials:"include"
+            })
+            if(!response.ok){
                 Swal.fire({
-                    title:"Error al crear la factura",
+                    title:"Error al traer el ticket",
                     icon:"error"
                 })
             }
             else{
-                Swal.fire({
-                    title:"Factura creada",
-                    icon:"success"
-                })
+                const data = await response.json();
+                return { ok: true, data:data }
             }
         } catch (error) {
-            Swal.fire({
-                title:"Error al crear la factura",
-                icon:"error"
-            })
+            return { ok: false, error: true }
         }
     }
-
 const value = {
     getCartData,
     postProdToCart,
     deleteProdFromCart,
-    createInvoice
+    createInvoice,
+    getTicket
   }
   return(
     <CartContext.Provider value={value}>

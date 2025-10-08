@@ -8,7 +8,7 @@ class UserController {
     register = async (req,res,next)=>{
         try {
             const response = await this.service.register(req.body);
-            console.log(response.first_name);
+
             res.status(200).send("Usuario registrado");
         } catch (error) {
             next(error);   
@@ -49,5 +49,6 @@ class UserController {
             next(error);
         }
     }
+
 }
 export const userController = new UserController(userService);

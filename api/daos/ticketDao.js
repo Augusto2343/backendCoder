@@ -4,6 +4,12 @@ class TicketDao extends MongoDao{
     constructor(model){
         super(model);
     }
-
+    getById = async(id) =>{
+        try{
+            return await this.model.findById(id);
+        }catch(error){
+            throw error;
+        }
+    }
 }
 export const ticketDao = new TicketDao(ticketModel)

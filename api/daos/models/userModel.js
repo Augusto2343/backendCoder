@@ -8,7 +8,8 @@ const usersSchema = new mongoose.Schema({
         password:{type:String, require:true},
         cartId:{type: mongoose.Schema.Types.ObjectId, ref: "carts", required: true},
         role:{type:String,enum:["admin","user"],require:true, default:"user"},
-        imgProfile:{type:String,default:""}
+        imgProfile:{type:String,default:""},
+        tickets:{type:Array,default:[]}
         
         
 })

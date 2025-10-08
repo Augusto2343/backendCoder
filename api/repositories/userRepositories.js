@@ -28,9 +28,11 @@ class UserRepository{
             throw error;
         }
     }
-    update = async(body)=>{
+    update = async(id,body)=>{
         try {
-            return await this.dao.update(body)
+    
+            return await this.dao.update(id,body)
+            
         } catch (error) {
             throw error;
         }
