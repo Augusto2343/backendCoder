@@ -14,10 +14,15 @@ const Login = () => {
         const userData = { password:password,email:email}
         try {
             const response = await login(userData)
+            
+            
             if(response.error){
+               const error = JSON.parse(response.error);
+
+                
                 Swal.fire({
                     title:"Error en el Login",
-                    html:`<h4>${response.error.message}</h4>`,
+                    html:`<h4>${error.message}</h4>`,
                     timer:6000
                 })
             }

@@ -48,16 +48,28 @@ class ProductService {
     }
     create = async(title,description,code,price,status,stock,category,thumbnail) =>{
         try{
+            let parsedStock =0
+            let parsedPrice=0;
+            try {
+                
+            if(typeof stock !== "number" )  parsedStock = parseInt(stock)
+            else parsedStock = stock;
+            if(typeof price !== "number")  parsedPrice = parseInt(price)
+            else parsedPrice = price
+                console.log(typeof(price), typeof(stock));
+            } catch (error) {
+             throw new CustomError("Los tipos de datos ingresados son incorrectos.",400)
+                
+            }
+            
             if( typeof title !=="string" ||
             typeof description !=="string" ||
-            typeof title !=="string" ||
             typeof code !=="string" ||
-            typeof price !=="number" ||
-            typeof stock !=="number" ||
+            typeof status !== "boolean" ||
             typeof category !=="string" ){
             throw new CustomError("Los tipos de datos ingresados son incorrectos.",400)
             }
-            const product = {title:title, description:description, code:code, price:price, status:status, stock:stock, category:category, thumbnail:thumbnail}
+            const product = {title:title, description:description, code:code, price:parsedPrice, status:status, stock:parsedStock, category:category, thumbnail:thumbnail}
             const response = this.repo.create(product);
             if(!response) throw new CustomError("Error al crear el producto",500)
             return response

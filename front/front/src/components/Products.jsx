@@ -3,11 +3,27 @@ import { useProdContext } from "./context/productContext";
 import ProductCard from "./productCard";
 import { useAuth } from "./context/AuthContext";
 import Error from "./Error";
+import ProductsAdmin from "./ProductsAdmin";
+
+
 
 const Products = ()=>{
+
     const {isAuthenticated,user} = useAuth();
     const { getProducts } = useProdContext();
     const [products,setProducts] = useState([]);
+    const [consoleAdmin,setConsoleAdmin] = useState(false);
+    const adminConsole = () =>{
+        if(user.role === "admin"){
+            if(!consoleAdmin){
+                setConsoleAdmin(true)
+            }
+            else{
+                setConsoleAdmin(false)
+
+            }
+        }
+    }
     const obtainProducts = async() =>{
         let productos = await getProducts();
         setProducts(productos)
@@ -34,9 +50,17 @@ const Products = ()=>{
         </div>
         {      
         user.role==="admin" ?
+        <>
         <button className="p-3 bg-blue-900/20 shadow-sm/10 hover:shadow-lg/30 hover:bg-blue-900/70 duration-400 rounded-lg mt-2" onClick={()=>{
-            handleAddProduct();
-        }}>Administrar productos</button>
+        adminConsole()}}>Administrar productos</button>
+        {
+            consoleAdmin?
+            <ProductsAdmin></ProductsAdmin>
+            :
+            <></>
+        }
+        </>
+
         :
         <>  
         </>

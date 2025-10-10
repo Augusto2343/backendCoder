@@ -29,7 +29,7 @@ import { CartProvider } from './components/context/cartContext'
     <BrowserRouter>
     
     <Header/>
-    <section className='h-screen w-full flex flex-col align-center justify-center'>
+    <section className=' w-full flex flex-col align-center justify-center'>
     <Routes>
       <Route path="/" element={<Home />}></Route>
       <Route path="/products" element={<Products />}></Route>
@@ -39,6 +39,8 @@ import { CartProvider } from './components/context/cartContext'
       <Route path="/register" element={<Register />}></Route>
       <Route path="/profile" element={<Profile />}></Route>
       <Route path="/invoice/:ticketId" element={<Invoice />}></Route>
+      <Route path="/invoice/:ticketId" element={<Invoice />}></Route>
+
       <Route path="/*" element={<NotFound />}></Route>
     </Routes>
     </section>

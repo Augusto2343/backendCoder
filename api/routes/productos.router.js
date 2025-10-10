@@ -7,9 +7,9 @@ export const productosRoutes = Router();
 
 productosRoutes.route("/")
     //Post
-    .post(passportCall("current",{session:false}),isAdmin, productController.create)
+    .post(passportCall("current",{session:false}), productController.create)
  //getAll
- .get(passportCall("current",{session:false}),productController.getAll)
+      .get(passportCall("current",{session:false}),productController.getAll)
 
  productosRoutes.route("/:pid")
     //getById

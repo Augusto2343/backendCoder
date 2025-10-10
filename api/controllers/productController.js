@@ -17,6 +17,8 @@ class ProductController{
     }
     create = async(req,res,next)=>{
         try {
+            console.log(req.body);
+            
             let {title,description,code,price,status,stock,category,thumbnail} = req.body;
             
             return res.send(await  this.service.create(title,description,code,price,status,stock,category,thumbnail))

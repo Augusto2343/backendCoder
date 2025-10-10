@@ -13,7 +13,7 @@ class TicketController {
             res.cookie("token", token, {
                 httpOnly: true,
                 sameSite: "lax",
-                maxAge: 19*600
+                maxAge: 19*600*1000
             });
             return res.status(201).json(ticket);
         }catch(error){

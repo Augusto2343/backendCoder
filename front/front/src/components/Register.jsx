@@ -18,9 +18,10 @@ const Register = () => {
         try {
             const response = await register(userData)
             if(response.error){
+                const error = JSON.parse(response.error)
                 Swal.fire({
                     title:"Error en el registro",
-                    html:`<h4>${response.error.message}</h4>`,
+                    html:`<h4>${error}</h4>`,
                     timer:6000
                 })
             }
