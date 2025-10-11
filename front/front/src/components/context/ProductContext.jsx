@@ -57,102 +57,119 @@ export const ProdProvider = ({children}) =>{
             })
         }
     }
-    const postOneProduct = async(body) =>{
+    const postOneProduct = async (body) => {
         console.log(body);
-        
-        try {
-            const response = await fetch("http://localhost:5000/api/products/",{
-                method:"POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-                credentials:"include"
-            })
-            if(!response.ok){
-                let error = JSON.parse(response.error)
-                return Swal.fire({
-                    title:"Error al postear el producto",
-                    text:error,
-                    icon:"error"
-                })
-            }
-            else{
-                Swal.fire({
-                    title:"Producto subido correctamente.",
-                    icon:"success"
-                })
-            }
-        } catch (error) {
-                return Swal.fire({
-                    title:"Error en el servidor",
-                    text:"Vuelva a intentar despues",
-                    icon:"error"
-                })
-        }
-    }
-    const deleteProd = async(id) =>{
-        try {
-            const response = await fetch(`http://localhost:5000/api/products/${id}`,{
-                method:"DELETE",
-                credentials:"include"
-            })
-            if(!response.ok){
-                let error = JSON.parse(response.error)
-                Swal.fire({
-                    title:"Error al borrar el producto",
-                    text:error,
-                    icon:"error"
-                })
-            }
-            else{
-                Swal.fire({
-                    title:"Producto eliminado correctamente.",
-                    icon:"success"
-                })
-            }
-            
 
-        } catch (error) {
-            Swal.fire({
-                title:"Error en el servidor",
-                text:"Vuelva intentarlo mas tarde"
-            })
-        }
-    }
-    const updateProd = async(id,body) =>{
         try {
-            const response = await fetch(`http://localhost:5000/api/products/${id}`,{
-                method:"PUT",
+            const response = await fetch("http://localhost:5000/api/products/", {
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body),
-                credentials:"include"
-            })
-            if(!response.ok){
-                let error = JSON.parse(response.error)
-                Swal.fire({
-                    title:"Error al actualizar el producto",
-                    text:error,
-                    icon:"error"
-                })
+                credentials: "include"
+            });
+            if (!response.ok) {
+                let error;
+                try {
+                    error = JSON.parse(await response.text());
+                } catch {
+                    error = "Error desconocido";
+                }
+                await Swal.fire({
+                    title: "Error al postear el producto",
+                    text: error,
+                    icon: "error"
+                });
+            } else {
+                await Swal.fire({
+                    title: "Producto subido correctamente.",
+                    icon: "success"
+                });
+                window.location.reload();
             }
-            else{
-                Swal.fire({
-                    title:"Producto actualizado correctamente.",
-                    icon:"success"
-                })
-            }
-            
         } catch (error) {
-            Swal.fire({
-                title:"Error en el servidor",
-                text:"Vuelva a intentarlo más tarde",
-                icon:"error"
-            })
+            await Swal.fire({
+                title: "Error en el servidor",
+                text: "Vuelva a intentar despues",
+                icon: "error"
+            });
         }
-    }
+    };
+
+    const deleteProd = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+            if (!response.ok) {
+                let error;
+                try {
+                    error = JSON.parse(await response.text());
+                } catch {
+                    error = "Error desconocido";
+                }
+                await Swal.fire({
+                    title: "Error al borrar el producto",
+                    text: error,
+                    icon: "error"
+                });
+            } else {
+                await Swal.fire({
+                    title: "Producto eliminado correctamente.",
+                    icon: "success"
+                });
+                window.location.reload();
+            }
+        } catch (error) {
+            await Swal.fire({
+                title: "Error en el servidor",
+                text: "Vuelva intentarlo mas tarde",
+                icon: "error"
+            });
+        }
+    };
+
+    const updateProd = async (id, body) => {
+        try {
+            console.log(body);
+
+            const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+                credentials: "include"
+            });
+            if (!response.ok) {
+                let error;
+                try {
+                    error = JSON.parse(await response.text());
+                } catch {
+                    error = "Error desconocido";
+                }
+                await Swal.fire({
+                    title: "Error al actualizar el producto",
+                    text: error,
+                    icon: "error"
+                });
+            } else {
+                await Swal.fire({
+                    title: "Producto actualizado correctamente.",
+                    icon: "success"
+                });
+                window.location.reload();
+            }
+        } catch (error) {
+            await Swal.fire({
+                title: "Error en el servidor",
+                text: "Vuelva a intentarlo más tarde",
+                icon: "error"
+            });
+        }
+    };
 
 const value = {
     getProducts,
