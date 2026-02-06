@@ -16,8 +16,8 @@ import Footer from './components/Footer'
 import Header from './components/Header'
 import { AuthProvider } from './components/context/AuthContext'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
-import { ProdProvider } from './components/context/productContext'
-import { CartProvider } from './components/context/cartContext'
+import { ProdProvider } from './components/context/ProductContext.jsx'
+import { CartProvider } from './components/context/CartContext.jsx'
  function  App() {
 
   

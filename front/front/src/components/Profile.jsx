@@ -22,7 +22,7 @@ const Profile = () =>{
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left: Profile card */}
+                
                     <div className="md:col-span-1">
                         <div className="bg-white/10 backdrop-blur rounded-xl p-6 border border-white/10 shadow-xl">
                             <div className="flex flex-col items-center text-center">
@@ -41,7 +41,7 @@ const Profile = () =>{
                         </div>
                     </div>
 
-                    {/* Right: Details */}
+
                     <div className="md:col-span-2 space-y-6">
                         <div className="bg-white rounded-xl shadow-lg border border-gray-100">
                             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
