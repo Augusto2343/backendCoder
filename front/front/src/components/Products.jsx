@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useProdContext } from "./context/productContext";
+import { useProdContext } from "./context/ProductContext";
 import ProductCard from "./productCard";
 import { useAuth } from "./context/AuthContext";
 import Error from "./Error";

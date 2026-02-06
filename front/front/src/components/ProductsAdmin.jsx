@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useProdContext } from "./context/productContext";
+import { useProdContext } from "./context/ProductContext";
 import Swal from "sweetalert2";
 const ProductsAdmin = () =>{
     const {postOneProduct,getProducts,updateProd,deleteProd} = useProdContext()

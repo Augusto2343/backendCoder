@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useCartContext } from "./context/cartContext";
+import { useCartContext } from "./context/CartContext";
 import { useAuth } from "./context/AuthContext";
 import { useState,useEffect } from "react";
 import Swal from "sweetalert2";

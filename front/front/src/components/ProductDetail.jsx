@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
-import { useProdContext } from "./context/productContext";
+import { useProdContext } from "./context/ProductContext";
 import Swal from "sweetalert2";
-import { useCartContext } from "./context/cartContext";
+import { useCartContext } from "./context/CartContext";
 import { useAuth } from "./context/AuthContext";
 const ProductDetail = () =>{
 

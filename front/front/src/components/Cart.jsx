@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext"
 import Error from "./Error";
-import { useCartContext } from "./context/cartContext";
+import { useCartContext } from "./context/CartContext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
