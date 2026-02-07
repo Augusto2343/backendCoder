@@ -9,9 +9,11 @@ export const useCartContext = () =>{
 }
 
 export const CartProvider = ({children}) =>{
+    const urlBack = import.meta.env.VITE_API_URL;
+
     const getCartData = async(id) =>{
         try {
-         const response = await fetch(`http://localhost:5000/api/carts/${id}`,{
+         const response = await fetch(`${urlBack}api/carts/${id}`,{
             method:"GET",
             credentials:"include"
          })   
@@ -35,7 +37,7 @@ export const CartProvider = ({children}) =>{
     const postProdToCart = async (id,idProd) =>{
         try {
         
-         const response = await fetch(`http://localhost:5000/api/carts/${id}/product/${idProd}`,{
+         const response = await fetch(`${urlBack}api/carts/${id}/product/${idProd}`,{
             method:"POST",
             credentials:"include"
          })   
@@ -63,7 +65,7 @@ export const CartProvider = ({children}) =>{
     }
     const deleteProdFromCart = async(id,idProd) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/carts/${id}/product/${idProd}`,{
+            const response = await fetch(`${urlBack}api/carts/${id}/product/${idProd}`,{
                 method:"DELETE",
                 credentials:"include"
             })
@@ -93,7 +95,7 @@ export const CartProvider = ({children}) =>{
     }
     const createInvoice = async(idCart,idUser) =>{
         try {
-            const response = await fetch(`http://localhost:5000/api/ticket/${idCart}/${idUser}`,{
+            const response = await fetch(`${urlBack}api/ticket/${idCart}/${idUser}`,{
                 method:"POST",
                 credentials:"include"
             })
@@ -110,7 +112,7 @@ export const CartProvider = ({children}) =>{
     }
     const getTicket = async (id) =>{
         try {
-            const response = await fetch(`http://localhost:5000/api/ticket/${id}`,{
+            const response = await fetch(`${urlBack}api/ticket/${id}`,{
                 method:"GET",
                 credentials:"include"
             })

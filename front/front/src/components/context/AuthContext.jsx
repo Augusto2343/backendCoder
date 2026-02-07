@@ -10,7 +10,7 @@ export const AuthProvider = ({children}) =>{
     const [user,setUser] = useState(null);
     const [isLoading,setIsLoading] =useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    const urlBack = import.meta.env.VITE_API_URL;
     // Check if user is logged in on app start
     useEffect(() => {
       checkAuthStatus();
@@ -19,7 +19,7 @@ export const AuthProvider = ({children}) =>{
     const checkAuthStatus = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5000/api/session/current', {
+        const response = await fetch(`${urlBack}/api/session/current`, {
           method: 'GET',
           credentials: 'include' // This is important for cookies
         });
@@ -41,7 +41,7 @@ export const AuthProvider = ({children}) =>{
     };
     const login = async (credentials) => {
         try {
-          const response = await fetch('http://localhost:5000/api/login', {
+          const response = await fetch(`${urlBack}/api/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export const AuthProvider = ({children}) =>{
     
       const register = async (userData) => {
         try {
-          const response = await fetch('http://localhost:5000/api/register', {
+          const response = await fetch(`${urlBack}/api/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export const AuthProvider = ({children}) =>{
       };
       const logout = async() =>{
         try {
-          const response = await fetch('http://localhost:5000/api/logout',{
+          const response = await fetch(`${urlBack}/api/logout`,{
             method: 'GET',
             credentials: 'include'
           })
