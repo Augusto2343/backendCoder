@@ -8,7 +8,7 @@ export const cartsRoutes = Router();
 //Metodo Post 
 cartsRoutes.post("/",passportCall("current",{session:false}),cartController.create)
 //Metodo get by id
-cartsRoutes.get("/:cid",passportCall("current",{session:false}),cartController.getById)
+cartsRoutes.get("/",passportCall("current",{session:false}),cartController.getById)
 // Metodo delete
 cartsRoutes.delete("/:cid",passportCall("current",{session:false}),cartController.delete)
 //Método deleteProd 

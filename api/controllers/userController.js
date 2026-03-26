@@ -22,7 +22,7 @@ class UserController {
             const {email, password} = req.body;
             const user = await this.service.login(email,password);
             const token = this.service.generateToken(user);
-            res.cookie("token",token,{httpOnly:true});
+            res.cookie("token",token,{httpOnly:true,secure:true,sameSite:"None"});
             return res.status(200).send("Logueado correctamente");
         } catch (error) {
             next(error);   

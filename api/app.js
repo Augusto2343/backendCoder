@@ -13,15 +13,14 @@ import passport from "passport";
 import cors from "cors";
 import ticketRouter from "./routes/ticketRouter.js"
 import { errorHandler } from "./middlewares/error-handler.js";
+
 const app = express();
 const port = config.PORT;
 let originsUrls=( config.FRONT_API_URL).split(",")
 
 
-
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
-app.use(express.static(__dirname + "/public"))
 
 app.use(cors({
     origin:originsUrls,
@@ -46,3 +45,4 @@ app.use("/api/carts",cartsRouter);
 app.use("/api/ticket",ticketRouter)
 app.use("/api",userRouter)
 app.use(errorHandler)
+export default app;

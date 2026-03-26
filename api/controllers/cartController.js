@@ -1,4 +1,6 @@
 import{ cartService} from "../services/cartService.js"
+import jwt from "jsonwebtoken"
+import CustomError from "../utils/custom-error.js";
 class CartController {
     constructor(service){
         this.service = service;
@@ -6,9 +8,10 @@ class CartController {
     }
     getById = async(req,res,next) =>{
         try {
-            const user = req.user;
-            const {cid} = req.params;
-            return res.send(await this.service.getById(cid))
+            const token = req.cookies.token;
+            const usr =jwt.verify(token);
+            if(!usr) return next(new CustomError("Debe loguearse primero",400));
+            return res.send(await this.service.getById(usr.cartId))
         } catch (error) {
             next(error)
         }

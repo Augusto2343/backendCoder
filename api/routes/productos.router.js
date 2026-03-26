@@ -7,15 +7,15 @@ export const productosRoutes = Router();
 
 productosRoutes.route("/")
     //Post
-    .post(passportCall("current",{session:false}), productController.create)
+    .post(passportCall("current",{}), productController.create)
  //getAll
-      .get(passportCall("current",{session:false}),productController.getAll)
+      .get(passportCall("current",{}),productController.getAll)
 
  productosRoutes.route("/:pid")
     //getById
-    .get(passportCall("current",{session:false}),productController.getById)
+    .get(passportCall("current",{}),productController.getById)
   //Update
-    .put(passportCall("current",{session:false}),isAdmin,productController.update)
+    .put(passportCall("current",{}),isAdmin,productController.update)
  //Delete
- .delete(passportCall("current",{session:false}),isAdmin,productController.delete)
+ .delete(passportCall("current",{}),isAdmin,productController.delete)
 export default productosRoutes;
